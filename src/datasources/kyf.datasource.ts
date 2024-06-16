@@ -1,13 +1,34 @@
 import { DataSource } from 'typeorm';
-import { Test1718544614009 } from '../migrations/1718544614009-test';
+import { Global, Module } from '@nestjs/common';
 
-export const KYFDataSource = new DataSource({
-  type: 'mysql',
-  host: '127.0.0.1',
-  port: 3306,
-  username: 'root',
-  password: '',
-  database: 'knowyourflag',
-  entities: [],
-  migrations: [Test1718544614009],
-});
+@Global()
+@Module({
+  imports: [],
+  providers: [
+    {
+      provide: DataSource,
+      inject: [],
+      useFactory: async () => {
+        // using the factory function to create the datasource instance
+        try {
+          const dataSource = new DataSource({
+            type: 'mysql',
+            host: '127.0.0.1',
+            port: 3306,
+            username: 'root',
+            password: '',
+            database: 'knowyourflag',
+            entities: ['../entities/*.entity.ts'],
+          });
+          await dataSource.initialize();
+          console.log('Database connected successfully');
+          return dataSource;
+        } catch (error) {
+          console.log('Error connecting to database');
+          throw error;
+        }
+      },
+    },
+  ],
+})
+export class KYFDataSourceModule {}

@@ -1,22 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GameResultModule } from './game-result/game-result.module';
+import { KYFDataSourceModule } from './datasources/kyf.datasource';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: '127.0.0.1',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'knowyourflag',
-      entities: ['../entities/*.ts'],
-    }),
-    GameResultModule,
-  ],
+  imports: [KYFDataSourceModule, GameResultModule],
   controllers: [AppController],
   providers: [AppService],
 })
