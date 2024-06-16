@@ -6,7 +6,7 @@ export class GameResultController {
   constructor(private readonly gameResultService: GameResultService) {}
 
   @Get('/test')
-  get() {
-    return { message: 'test' };
+  async get() {
+    return await this.gameResultService.findAll();
   }
 }

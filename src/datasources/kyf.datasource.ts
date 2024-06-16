@@ -18,7 +18,7 @@ import { Global, Module } from '@nestjs/common';
             username: 'root',
             password: '',
             database: 'knowyourflag',
-            entities: ['../entities/*.entity.ts'],
+            entities: [`${__dirname}/../entities/*.entity.js`],
           });
           await dataSource.initialize();
           console.log('Database connected successfully');
@@ -30,5 +30,6 @@ import { Global, Module } from '@nestjs/common';
       },
     },
   ],
+  exports: [DataSource],
 })
 export class KYFDataSourceModule {}
