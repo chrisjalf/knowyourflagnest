@@ -1,5 +1,6 @@
 import { DataSource } from 'typeorm';
-import { Test1718544614009 } from '../migrations/1718544614009-test';
+//import { Test1718544614009 } from '../migrations/1718544614009-test';
+//import { User1718889383795 } from '../migrations/1718889383795-user';
 
 export const KYFDataSource = new DataSource({
   type: 'mysql',
@@ -9,5 +10,5 @@ export const KYFDataSource = new DataSource({
   password: '',
   database: 'knowyourflag',
   entities: [],
-  migrations: [Test1718544614009],
+  migrations: ['src/migrations/*{.ts,.js}'],
 });
