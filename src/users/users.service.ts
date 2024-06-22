@@ -1,9 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+import { User } from 'src/entities/user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
 
-export type User = any;
+export type PrevUser = any;
 
 @Injectable()
 export class UsersService {
+  private usersRepository: Repository<User>;
+
+  constructor(private dataSource: DataSource) {
+    this.usersRepository = this.dataSource.getRepository(User);
+  }
+
   private readonly users = [
     {
       userId: 1,
@@ -17,7 +26,15 @@ export class UsersService {
     },
   ];
 
-  async findOne(username: string): Promise<User | undefined> {
+  async findOne(username: string): Promise<PrevUser | undefined> {
     return this.users.find((user) => user.username === username);
+  }
+
+  async findOneByEmail(email: string): Promise<User | undefined> {
+    return this.usersRepository.findOneBy({ email });
+  }
+
+  async save(user: CreateUserDto) {
+    this.usersRepository.save(user);
   }
 }
