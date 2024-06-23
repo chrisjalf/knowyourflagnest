@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { User } from 'src/entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -8,29 +9,25 @@ export type PrevUser = any;
 @Injectable()
 export class UsersService {
   private usersRepository: Repository<User>;
+  private saltOrRounds = 10;
 
   constructor(private dataSource: DataSource) {
     this.usersRepository = this.dataSource.getRepository(User);
   }
 
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  async register(dto: CreateUserDto) {
+    const user = await this.findOneByEmail(dto.email);
 
-  async findOne(username: string): Promise<PrevUser | undefined> {
-    return this.users.find((user) => user.username === username);
+    if (user) throw new ConflictException();
+    else {
+      dto.password = await bcrypt.hash(dto.password, this.saltOrRounds);
+      this.save(dto);
+
+      return {};
+    }
   }
 
-  async findOneByEmail(email: string): Promise<User | undefined> {
+  async findOneByEmail(email: string) {
     return this.usersRepository.findOneBy({ email });
   }
 
