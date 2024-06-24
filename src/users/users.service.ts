@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, FindOptionsSelect, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -25,6 +25,21 @@ export class UsersService {
 
       return {};
     }
+  }
+
+  async findOneById(id: number, selectPassword: boolean = false) {
+    const selectables: FindOptionsSelect<User> = {
+      id: true,
+      email: true,
+      name: true,
+    };
+
+    if (selectPassword) selectables['password'] = selectPassword;
+
+    return this.usersRepository.findOne({
+      where: { id },
+      select: selectables,
+    });
   }
 
   async findOneByEmail(email: string) {
