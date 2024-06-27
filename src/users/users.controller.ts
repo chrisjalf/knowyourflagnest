@@ -5,6 +5,7 @@ import {
   Get,
   Post,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,5 +27,14 @@ export class UsersController {
     const { sub } = user;
 
     return this.usersService.findOneById(sub);
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('delete')
+  async delete(@Request() req) {
+    const { user } = req;
+    const { sub } = user;
+
+    return this.usersService.delete(sub);
   }
 }

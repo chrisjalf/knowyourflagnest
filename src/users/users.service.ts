@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { DataSource, FindOptionsSelect, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/entities/user.entity';
@@ -48,5 +52,14 @@ export class UsersService {
 
   async save(user: CreateUserDto) {
     this.usersRepository.save(user);
+  }
+
+  async delete(id: number) {
+    try {
+      this.usersRepository.softDelete(id);
+      return {};
+    } catch {
+      throw new BadRequestException();
+    }
   }
 }
