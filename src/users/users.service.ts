@@ -36,6 +36,7 @@ export class UsersService {
       id: true,
       email: true,
       name: true,
+      createdAt: true,
     };
 
     if (selectPassword) selectables['password'] = selectPassword;
