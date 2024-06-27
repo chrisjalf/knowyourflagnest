@@ -1,19 +1,46 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class Test1718544614009 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
-      CREATE TABLE \`game_result\` (
-        \`id\` INT AUTO_INCREMENT PRIMARY KEY,
-        \`gameType\` VARCHAR(255) NOT NULL,
-        \`gameMode\` VARCHAR(255) NOT NULL,
-        \`score\` INT NOT NULL DEFAULT 0,
-        \`time\` INT NOT NULL
-      )
-    `);
+    await queryRunner.createTable(
+      new Table({
+        name: 'game_result',
+        columns: [
+          {
+            name: 'id',
+            type: 'int',
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
+          {
+            name: 'gameType',
+            type: 'varchar',
+          },
+          {
+            name: 'gameMode',
+            type: 'varchar',
+          },
+          {
+            name: 'score',
+            type: 'int',
+            default: 0,
+          },
+          {
+            name: 'time',
+            type: 'int',
+          },
+          {
+            name: 'createdAt',
+            type: 'timestamp',
+            default: 'CURRENT_TIMESTAMP',
+          },
+        ],
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE \`game_result\``);
+    await queryRunner.dropTable('game_result');
   }
 }
